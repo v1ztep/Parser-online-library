@@ -1,7 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from pathvalidate import sanitize_filename
+from pathvalidate import sanitize_filename, sanitize_filepath
 
 
 def download_txt(url, filename, folder='books/'):
@@ -13,7 +13,12 @@ def download_txt(url, filename, folder='books/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    # TODO: Здесь ваша реализация
+    url1 = url
+    correct_filename = f"{sanitize_filename(filename)}.txt"
+    correct_folder = sanitize_filepath(folder)
+
+    return os.path.join(correct_folder, correct_filename)
+
 
 url = 'http://tululu.org/txt.php?id=1'
 
@@ -25,9 +30,6 @@ print(filepath)  # Выведется books/Алиби.txt
 
 filepath = download_txt(url, 'Али\\би', folder='txt/')
 print(filepath)  # Выведется txt/Алиби.txt
-
-
-
 
 # pattern = 'http://tululu.org/b{}/'
 #
@@ -59,4 +61,3 @@ print(filepath)  # Выведется txt/Алиби.txt
 #         filename = 'id{}.txt'.format(id)
 #         with open('books/{}'.format(filename), 'w') as file:
 #             file.write(response.text)
-
