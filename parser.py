@@ -13,38 +13,35 @@ def download_txt(url, filename, folder='books/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    url1 = url
+    response_txt = requests.get(url, allow_redirects=False)
+    response_txt.raise_for_status()
+
     correct_filename = f"{sanitize_filename(filename)}.txt"
     correct_folder = sanitize_filepath(folder)
+    correct_path = os.path.join(correct_folder, correct_filename)
 
-    return os.path.join(correct_folder, correct_filename)
+    os.makedirs(correct_folder, exist_ok=True)
+
+    if response_txt.status_code == 200:
+        with open(correct_path, 'w') as file:
+            file.write(response_txt.text)
+
+    return correct_path
 
 
-url = 'http://tululu.org/txt.php?id=1'
+pattern = 'http://tululu.org/b{}/'
 
-filepath = download_txt(url, 'Алиби')
-print(filepath)  # Выведется books/Алиби.txt
+for book_id in range(1, 11):
+    url_book = pattern.format(book_id)
 
-filepath = download_txt(url, 'Али/би', folder='books/')
-print(filepath)  # Выведется books/Алиби.txt
+    response = requests.get(url_book, allow_redirects=False)
+    response.raise_for_status()
 
-filepath = download_txt(url, 'Али\\би', folder='txt/')
-print(filepath)  # Выведется txt/Алиби.txt
-
-# pattern = 'http://tululu.org/b{}/'
-#
-#
-# for id in range(1, 2):
-#     url = pattern.format(id)
-#
-#     response = requests.get(url, allow_redirects=False)
-#     response.raise_for_status()
-#
-#     if response.status_code == 200:
-#         soup = BeautifulSoup(response.text, 'lxml')
-#         title_and_author = soup.find('div', id='content').find('h1').text.split(' \xa0 :: \xa0 ')
-#         print('Заголовок:', title_and_author[0])
-#         print('Автор:', title_and_author[1])
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'lxml')
+        title, author = soup.find('div', id='content').find('h1').text.split(' \xa0 :: \xa0 ')
+        url_txt = f'http://tululu.org/txt.php?id={book_id}'
+        download_txt(url_txt, f"{book_id}.{title}")
 
 
 # os.makedirs("books", exist_ok=True)
