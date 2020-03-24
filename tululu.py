@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename, sanitize_filepath
 from urllib.parse import urljoin
 
+pattern = 'http://tululu.org/b{}/'
+
 
 def download_txt(url, filename, folder='books/'):
     """Функция для скачивания текстовых файлов.
@@ -46,9 +48,7 @@ def download_image(url, filename, folder='images/'):
     return correct_path
 
 
-pattern = 'http://tululu.org/b{}/'
-
-for book_id in range(9, 10):
+for book_id in range(1, 11):
     url_book = pattern.format(book_id)
 
     response = requests.get(url_book, allow_redirects=False)
