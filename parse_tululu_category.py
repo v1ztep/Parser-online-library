@@ -2,10 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-pattern = 'http://tululu.org/l55/{}/'
+pattern_category = 'http://tululu.org/l55/{}/'
 
 for category_page in range(1, 11):
-    url_category = pattern.format(category_page)
+    url_category = pattern_category.format(category_page)
 
     response = requests.get(url_category, allow_redirects=False)
     response.raise_for_status()
