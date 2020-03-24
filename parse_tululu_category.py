@@ -1,0 +1,17 @@
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+url_category = 'http://tululu.org/l55/'
+
+
+response = requests.get(url_category, allow_redirects=False)
+response.raise_for_status()
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'lxml')
+    books = soup.find_all('div', class_='bookimage')
+    for book in books:
+        href = book.a['href']
+        url_book = urljoin(url_category, href)
+        print(url_book)
