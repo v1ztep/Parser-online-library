@@ -5,7 +5,6 @@ from pathvalidate import sanitize_filename, sanitize_filepath
 from urllib.parse import urljoin
 import json
 
-
 pattern = 'http://tululu.org/b{}/'
 
 
@@ -33,6 +32,7 @@ def download_txt(url, filename, folder='books/'):
 
     return correct_path
 
+
 def download_image(url, filename, folder='images/'):
     response_image = requests.get(url, allow_redirects=False)
     response_image.raise_for_status()
@@ -49,6 +49,8 @@ def download_image(url, filename, folder='images/'):
 
     return correct_path
 
+
+descriptions = []
 
 for book_id in range(1, 11):
     url_book = pattern.format(book_id)
@@ -86,5 +88,11 @@ for book_id in range(1, 11):
             "genres": genres
         }
 
-        with open("description.json", "w", encoding='utf8') as file:
-            json.dump(description, file, ensure_ascii=False)
+        descriptions.append(description)
+
+with open("description.json", "w", encoding='utf8') as file:
+    json.dump(descriptions, file, ensure_ascii=False, indent=4)
+
+with open("description.json", "r", encoding='utf8') as my_file:
+    description = json.load(my_file)
+    print(description)
