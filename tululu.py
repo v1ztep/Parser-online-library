@@ -3,6 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename, sanitize_filepath
 from urllib.parse import urljoin
+import json
+
 
 pattern = 'http://tululu.org/b{}/'
 
@@ -58,17 +60,31 @@ for book_id in range(1, 11):
         soup = BeautifulSoup(response.text, 'lxml')
         title, author = soup.find('div', id='content').find('h1').text.split(' \xa0 :: \xa0 ')
         url_txt = f'http://tululu.org/txt.php?id={book_id}'
-        print(download_txt(url_txt, f"{book_id}.{title}"))
+        book_path = download_txt(url_txt, f"{book_id}.{title}")
 
-        image_path = soup.find('div', class_='bookimage').find('img')['src']
-        url_image = urljoin(pattern, image_path)
-        name_image = image_path.split('/')[-1]
-        print(download_image(url_image, name_image))
+        image_src = soup.find('div', class_='bookimage').find('img')['src']
+        url_image = urljoin(pattern, image_src)
+        name_image = image_src.split('/')[-1]
+        image_path = download_image(url_image, name_image)
 
-        comments = soup.find_all('div', class_='texts')
-        for comment in comments:
-            print(comment.span.string)
+        comments = []
+        comments_soup = soup.find_all('div', class_='texts')
+        for comment in comments_soup:
+            comments.append(comment.span.string)
 
-        genres = soup.find('span', class_='d_book').find_all('a')
-        for genre in genres:
-            print(genre.text)
+        genres = []
+        genres_soup = soup.find('span', class_='d_book').find_all('a')
+        for genre in genres_soup:
+            genres.append(genre.text)
+
+        description = {
+            "title": title,
+            "author": author,
+            "image_path": image_path,
+            "book_path": book_path,
+            "comments": comments,
+            "genres": genres
+        }
+
+        with open("description.json", "w", encoding='utf8') as file:
+            json.dump(description, file, ensure_ascii=False)
