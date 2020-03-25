@@ -5,8 +5,6 @@ from pathvalidate import sanitize_filename, sanitize_filepath
 from urllib.parse import urljoin
 import json
 
-pattern = 'http://tululu.org/b{}/'
-
 
 def download_txt(url, filename, folder='books/'):
     """Функция для скачивания текстовых файлов.
@@ -50,49 +48,57 @@ def download_image(url, filename, folder='images/'):
     return correct_path
 
 
-descriptions = []
+def main():
+    pattern = 'http://tululu.org/b{}/'
 
-for book_id in range(1, 2):
-    url_book = pattern.format(book_id)
+    descriptions = []
 
-    response = requests.get(url_book, allow_redirects=False)
-    response.raise_for_status()
+    for book_id in range(1, 2):
+        url_book = pattern.format(book_id)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'lxml')
-        title, author = soup.find('div', id='content').find('h1').text.split(' \xa0 :: \xa0 ')
-        url_txt = f'http://tululu.org/txt.php?id={book_id}'
-        book_path = download_txt(url_txt, f"{book_id}.{title}")
+        response = requests.get(url_book, allow_redirects=False)
+        response.raise_for_status()
 
-        image_src = soup.find('div', class_='bookimage').find('img')['src']
-        url_image = urljoin(pattern, image_src)
-        name_image = image_src.split('/')[-1]
-        image_path = download_image(url_image, name_image)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'lxml')
+            title, author = soup.find('div', id='content').find('h1').text.split(' \xa0 :: \xa0 ')
+            url_txt = f'http://tululu.org/txt.php?id={book_id}'
+            book_path = download_txt(url_txt, f"{book_id}.{title}")
 
-        comments = []
-        comments_soup = soup.find_all('div', class_='texts')
-        for comment in comments_soup:
-            comments.append(comment.span.string)
+            image_src = soup.find('div', class_='bookimage').find('img')['src']
+            url_image = urljoin(pattern, image_src)
+            name_image = image_src.split('/')[-1]
+            image_path = download_image(url_image, name_image)
 
-        genres = []
-        genres_soup = soup.find('span', class_='d_book').find_all('a')
-        for genre in genres_soup:
-            genres.append(genre.text)
+            comments = []
+            comments_soup = soup.find_all('div', class_='texts')
+            for comment in comments_soup:
+                comments.append(comment.span.string)
 
-        description = {
-            "title": title,
-            "author": author,
-            "image_path": image_path,
-            "book_path": book_path,
-            "comments": comments,
-            "genres": genres
-        }
+            genres = []
+            genres_soup = soup.find('span', class_='d_book').find_all('a')
+            for genre in genres_soup:
+                genres.append(genre.text)
 
-        descriptions.append(description)
+            description = {
+                "title": title,
+                "author": author,
+                "image_path": image_path,
+                "book_path": book_path,
+                "comments": comments,
+                "genres": genres
+            }
 
-with open("description.json", "w", encoding='utf8') as file:
-    json.dump(descriptions, file, ensure_ascii=False, indent=4)
+            descriptions.append(description)
 
-with open("description.json", "r", encoding='utf8') as my_file:
-    description = json.load(my_file)
-    print(description)
+    with open("description.json", "w", encoding='utf8') as file:
+        json.dump(descriptions, file, ensure_ascii=False, indent=4)
+
+    with open("description.json", "r", encoding='utf8') as my_file:
+        description = json.load(my_file)
+        print(description)
+
+
+
+if __name__ == '__main__':
+    main()
