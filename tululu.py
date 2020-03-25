@@ -52,7 +52,7 @@ def download_image(url, filename, folder='images/'):
 
 descriptions = []
 
-for book_id in range(1, 11):
+for book_id in range(1, 2):
     url_book = pattern.format(book_id)
 
     response = requests.get(url_book, allow_redirects=False)
