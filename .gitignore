@@ -3,3 +3,4 @@ books
 images
 bs4_tutorial.py
 description.json
+__pycache__
