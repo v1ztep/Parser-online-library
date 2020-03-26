@@ -25,7 +25,7 @@ def download_txt(url, filename, folder='books/'):
     os.makedirs(correct_folder, exist_ok=True)
 
     if response_txt.status_code == 200:
-        with open(correct_path, 'w') as file:
+        with open(correct_path, 'w', encoding='utf8') as file:
             file.write(response_txt.text)
 
     return correct_path
