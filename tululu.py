@@ -85,10 +85,9 @@ def main():
                 "author": author,
                 "image_path": image_path,
                 "book_path": book_path,
-                "comments": comments,
-                "genres": genres
+                "genres": genres,
+                "comments": comments
             }
-
             descriptions.append(description)
 
     with open("description.json", "w", encoding='utf8') as file:
