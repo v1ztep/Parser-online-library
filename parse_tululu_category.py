@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--start_page', type=int, default=1,
                     help='Стартовая страница категории')
 
-parser.add_argument('--end_page', type=int, default=2,
+parser.add_argument('--end_page', type=int, default=9999,
                     help='Конечная страница категории(не включительно)')
 
 parser.add_argument('--dest_folder', type=str, default='',
