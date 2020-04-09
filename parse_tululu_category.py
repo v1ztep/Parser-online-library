@@ -14,7 +14,7 @@ base_url = 'http://tululu.org/l55/{}'
 parser = argparse.ArgumentParser(
     description='Парсер онлайн библиотеки tululu.org'
 )
-parser.add_argument('--start_page', type=int, default=701,
+parser.add_argument('--start_page', type=int, default=1,
                     help='Стартовая страница категории')
 
 parser.add_argument('--end_page', type=int, default=9999,
@@ -55,7 +55,6 @@ for category_page in range(args.start_page, args.end_page):
         for book in books:
             count_book += 1
             author, title = book.a['title'].split(' - ', maxsplit=1)
-            print(count_book)
 
             image_src = book.img['src']
             url_image = urljoin(base_url, image_src)
