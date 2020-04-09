@@ -8,8 +8,6 @@ import json
 import argparse
 from pathvalidate import sanitize_filepath
 
-base_url = 'http://tululu.org/l55/{}'
-
 
 parser = argparse.ArgumentParser(
     description='Парсер онлайн библиотеки tululu.org'
@@ -17,7 +15,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--start_page', type=int, default=1,
                     help='Стартовая страница категории')
 
-parser.add_argument('--end_page', type=int, default=9999,
+parser.add_argument('--end_page', type=int, default=2,
                     help='Конечная страница категории(не включительно)')
 
 parser.add_argument('--dest_folder', type=str, default='',
@@ -32,7 +30,12 @@ parser.add_argument('--skip_imgs', action='store_true',
 parser.add_argument('--skip_txt', action='store_true',
                     help='Не скачивать книги')
 
+parser.add_argument('--category', type=str, default='l55',
+                    help='Категория (пример из "tululu.org/fantastic/" внести => "fantastic")')
+
 args = parser.parse_args()
+
+base_url = 'http://tululu.org/{}/{}'
 
 
 if args.start_page > 1:
@@ -43,7 +46,7 @@ else:
 descriptions = []
 
 for category_page in range(args.start_page, args.end_page):
-    category_url = base_url.format(category_page)
+    category_url = base_url.format(args.category, category_page)
 
     response_category = requests.get(category_url, allow_redirects=False)
     response_category.raise_for_status()
@@ -58,6 +61,7 @@ for category_page in range(args.start_page, args.end_page):
 
             image_src = book.img['src']
             url_image = urljoin(base_url, image_src)
+            print(url_image)
             name_image = image_src.split('/')[-1]
             if args.skip_imgs:
                 image_path = ''
