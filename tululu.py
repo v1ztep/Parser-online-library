@@ -3,7 +3,6 @@ import requests
 from pathvalidate import sanitize_filename, sanitize_filepath
 
 
-
 def download_txt(url, filename, folder=''):
     """Функция для скачивания текстовых файлов.
 
