@@ -6,13 +6,17 @@ from pathvalidate import sanitize_filename, sanitize_filepath
 
 def download_txt(url, filename, folder=''):
     """Функция для скачивания текстовых файлов.
+
     Args:
         url (str): Cсылка на текст, который хочется скачать.
         filename (str): Имя файла, с которым сохранять.
         folder (str): Папка, куда сохранять.
+        
     Returns:
         str: Путь до файла, куда сохранён текст.
+
     """
+
     response_txt = requests.get(url, allow_redirects=False)
     response_txt.raise_for_status()
 
