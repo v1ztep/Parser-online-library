@@ -32,6 +32,13 @@ def get_args():
     return parser.parse_args()
 
 
+def get_texts(soup_texts):
+    texts = []
+    for soup_text in soup_texts:
+        texts.append(soup_text.text)
+    return texts
+
+
 def main():
     base_url = 'http://tululu.org/{}/{}'
     args = get_args()
@@ -76,20 +83,11 @@ def main():
                 response_book = requests.get(url_book, allow_redirects=False)
                 response_book.raise_for_status()
 
-                comments = []
-                genres = []
                 if response_book.status_code == 200:
                     soup_book = BeautifulSoup(response_book.text, 'lxml')
 
-                    comments_soup = soup_book.select('.texts .black')
-                    for comment in comments_soup:
-                        comments.append(comment.span.text)
-
-                    genres_soup = soup_book.select('span.d_book a')
-                    for genre in genres_soup:
-                        genres.append(genre.text)
-                        # print(genre.text)
-
+                    comments = get_texts(soup_book.select('.texts .black'))
+                    genres = get_texts(soup_book.select('span.d_book a'))
 
                 description = {
                     "title": title,
