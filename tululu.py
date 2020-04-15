@@ -11,7 +11,7 @@ def download_txt(url, filename, folder=''):
         url (str): Cсылка на текст, который хочется скачать.
         filename (str): Имя файла, с которым сохранять.
         folder (str): Папка, куда сохранять.
-        
+
     Returns:
         str: Путь до файла, куда сохранён текст.
 
