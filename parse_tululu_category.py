@@ -27,7 +27,7 @@ def get_args():
                         help='Не скачивать книги')
 
     parser.add_argument('--category', type=str, default='l55',
-                        help='Категория (пример из "tululu.org/fantastic/" внести => "fantastic")')
+                        help='Категория (пример из "tululu.org/fantastic/" вписать => "--category fantastic")')
     return parser.parse_args()
 
 
