@@ -31,10 +31,10 @@ def get_args():
     return parser.parse_args()
 
 
-def get_texts(soup_texts):
+def get_texts(texts_soup):
     texts = []
-    for soup_text in soup_texts:
-        texts.append(soup_text.text)
+    for text_soup in texts_soup:
+        texts.append(text_soup.text)
     if not texts:
         return None
     return texts
@@ -48,40 +48,40 @@ def main():
     for category_page in range(args.start_page, args.end_page):
         category_url = base_url.format(args.category, category_page)
 
-        response_category = requests.get(category_url, allow_redirects=False)
-        response_category.raise_for_status()
-        if not response_category.status_code == 200:
+        category_response = requests.get(category_url, allow_redirects=False)
+        category_response.raise_for_status()
+        if not category_response.status_code == 200:
             break
 
-        soup_category = BeautifulSoup(response_category.text, 'lxml')
-        books = soup_category.select('#content .d_book')
+        category_soup = BeautifulSoup(category_response.text, 'lxml')
+        books = category_soup.select('#content .d_book')
 
         for book in books:
             author, title = book.a['title'].split(' - ', maxsplit=1)
 
             image_src = book.img['src']
-            url_image = urljoin(base_url, image_src)
-            name_image = image_src.split('/')[-1]
+            image_url = urljoin(base_url, image_src)
+            image_name = image_src.split('/')[-1]
             if args.skip_imgs:
                 image_path = None
             else:
-                image_path = download_image(url_image, name_image, folder=args.dest_folder)
+                image_path = download_image(image_url, image_name, folder=args.dest_folder)
 
             book_id = re.findall(r'\d+', book.a['href'])[0]
-            url_txt = f'https://tululu.org/txt.php?id={book_id}'
+            txt_url = f'https://tululu.org/txt.php?id={book_id}'
             if args.skip_txt:
                 book_path = None
             else:
-                book_path = download_txt(url_txt, title, folder=args.dest_folder)
+                book_path = download_txt(txt_url, title, folder=args.dest_folder)
 
-            url_book = f'https://tululu.org/b{book_id}/'
-            response_book = requests.get(url_book, allow_redirects=False)
-            response_book.raise_for_status()
+            book_url = f'https://tululu.org/b{book_id}/'
+            book_response = requests.get(book_url, allow_redirects=False)
+            book_response.raise_for_status()
 
-            if response_book.status_code == 200:
-                soup_book = BeautifulSoup(response_book.text, 'lxml')
-                comments = get_texts(soup_book.select('.texts .black'))
-                genres = get_texts(soup_book.select('span.d_book a'))
+            if book_response.status_code == 200:
+                book_soup = BeautifulSoup(book_response.text, 'lxml')
+                comments = get_texts(book_soup.select('.texts .black'))
+                genres = get_texts(book_soup.select('span.d_book a'))
 
             description = {
                 "title": title,

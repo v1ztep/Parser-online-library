@@ -24,36 +24,36 @@ def download_txt(url, filename, folder=None):
 
     """
 
-    response_txt = requests.get(url, allow_redirects=False)
-    response_txt.raise_for_status()
+    txt_response = requests.get(url, allow_redirects=False)
+    txt_response.raise_for_status()
 
-    if response_txt.status_code == 200:
-        correct_filename = f"{get_hash_sum(response_txt)}_{sanitize_filename(filename)}.txt"
+    if txt_response.status_code == 200:
+        correct_filename = f"{get_hash_sum(txt_response)}_{sanitize_filename(filename)}.txt"
         correct_folder = sanitize_filepath(os.path.join(folder, 'books'))
         correct_path = os.path.join(correct_folder, correct_filename)
 
         os.makedirs(correct_folder, exist_ok=True)
 
         with open(correct_path, 'w', encoding='utf8') as file:
-            file.write(response_txt.text)
+            file.write(txt_response.text)
 
         return correct_path
     return
 
 
 def download_image(url, filename, folder=None):
-    response_image = requests.get(url, allow_redirects=False)
-    response_image.raise_for_status()
+    image_response = requests.get(url, allow_redirects=False)
+    image_response.raise_for_status()
 
-    if response_image.status_code == 200:
-        correct_filename = f"{get_hash_sum(response_image)}_{sanitize_filename(filename)}"
+    if image_response.status_code == 200:
+        correct_filename = f"{get_hash_sum(image_response)}_{sanitize_filename(filename)}"
         correct_folder = sanitize_filepath(os.path.join(folder, 'images'))
         correct_path = os.path.join(correct_folder, correct_filename)
 
         os.makedirs(correct_folder, exist_ok=True)
 
         with open(correct_path, 'wb') as file:
-            file.write(response_image.content)
+            file.write(image_response.content)
 
         return correct_path
     return
