@@ -32,8 +32,9 @@ def get_args():
 
 
 def get_texts(soup_texts):
-    texts = []
+    texts = None
     for soup_text in soup_texts:
+        texts = []
         texts.append(soup_text.text)
     return texts
 
