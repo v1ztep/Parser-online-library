@@ -11,7 +11,7 @@ def get_hash_sum(response):
     return
 
 
-def download_txt(url, filename, folder=''):
+def download_txt(url, filename, folder=None):
     """Функция для скачивания текстовых файлов.
 
     Args:
@@ -41,7 +41,7 @@ def download_txt(url, filename, folder=''):
     return
 
 
-def download_image(url, filename, folder=''):
+def download_image(url, filename, folder=None):
     response_image = requests.get(url, allow_redirects=False)
     response_image.raise_for_status()
 
