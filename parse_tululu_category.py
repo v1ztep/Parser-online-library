@@ -35,6 +35,8 @@ def get_texts(soup_texts):
     texts = []
     for soup_text in soup_texts:
         texts.append(soup_text.text)
+    if not texts:
+        return None
     return texts
 
 
