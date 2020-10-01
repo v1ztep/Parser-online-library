@@ -13,7 +13,7 @@ def get_args():
 
     parser.add_argument('--start_page', type=int, default=1,
                         help='Стартовая страница категории(включительно)')
-    parser.add_argument('--end_page', type=int, default=9999,
+    parser.add_argument('--end_page', type=int, default=2,
                         help='Конечная страница категории(не включительно)')
 
     parser.add_argument('--dest_folder', type=str, default='',
@@ -39,7 +39,7 @@ def get_texts(soup_texts):
 
 
 def main():
-    base_url = 'http://tululu.org/{}/{}'
+    base_url = 'https://tululu.org/{}/{}'
     args = get_args()
 
     descriptions = []
@@ -48,7 +48,6 @@ def main():
 
         response_category = requests.get(category_url, allow_redirects=False)
         response_category.raise_for_status()
-
         if not response_category.status_code == 200:
             break
 
@@ -67,13 +66,13 @@ def main():
                 image_path = download_image(url_image, name_image, folder=args.dest_folder)
 
             book_id = re.findall(r'\d+', book.a['href'])[0]
-            url_txt = f'http://tululu.org/txt.php?id={book_id}'
+            url_txt = f'https://tululu.org/txt.php?id={book_id}'
             if args.skip_txt:
                 book_path = ''
             else:
                 book_path = download_txt(url_txt, title, folder=args.dest_folder)
 
-            url_book = f'http://tululu.org/b{book_id}/'
+            url_book = f'https://tululu.org/b{book_id}/'
             response_book = requests.get(url_book, allow_redirects=False)
             response_book.raise_for_status()
 
