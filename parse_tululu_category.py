@@ -61,14 +61,14 @@ def main():
             url_image = urljoin(base_url, image_src)
             name_image = image_src.split('/')[-1]
             if args.skip_imgs:
-                image_path = ''
+                image_path = None
             else:
                 image_path = download_image(url_image, name_image, folder=args.dest_folder)
 
             book_id = re.findall(r'\d+', book.a['href'])[0]
             url_txt = f'https://tululu.org/txt.php?id={book_id}'
             if args.skip_txt:
-                book_path = ''
+                book_path = None
             else:
                 book_path = download_txt(url_txt, title, folder=args.dest_folder)
 
