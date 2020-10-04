@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from tululu import download_txt, download_image
-import re
 import json
 import argparse
 
