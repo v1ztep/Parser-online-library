@@ -17,9 +17,9 @@ def get_args():
                         help='Конечная страница категории(не включительно)')
 
     parser.add_argument('--dest_folder', type=str, default=None,
-                        help='Путь к каталогу с результатами парсинга("имяПапки")')
+                        help='Путь к каталогу с результатами парсинга("--dest_folder имяПапки")')
     parser.add_argument('--json_path', type=str, default=None,
-                        help='Путь к *.json файлу("имяПапки")')
+                        help='Путь к *.json файлу("--json_path имяПапки")')
 
     parser.add_argument('--skip_imgs', action='store_true',
                         help='Не скачивать картинки')
