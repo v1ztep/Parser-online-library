@@ -41,19 +41,12 @@ def get_texts(texts_soup):
 
 
 def main():
-    base_url = 'https://tululu.org/{}/{}'
-
-    # image_src = '/shots/239.jpg'
-    # print(image_src)
-    # image_url = urljoin(base_url, image_src)
-    # print(image_url)
-    # return
-
+    base_url = 'https://tululu.org/'
     args = get_args()
 
     descriptions = []
     for category_page in range(args.start_page, args.end_page):
-        category_url = base_url.format(args.category, category_page)
+        category_url = urljoin(base_url, args.category + '/' + str(category_page))
 
         category_response = requests.get(category_url, allow_redirects=False)
         category_response.raise_for_status()
@@ -66,29 +59,35 @@ def main():
         for book in books:
             author, title = book.a['title'].split(' - ', maxsplit=1)
 
-            image_src = book.img['src']
-            image_url = urljoin(base_url, image_src)
-            image_name = image_src.split('/')[-1]
             if args.skip_imgs:
                 image_path = None
             else:
+                image_src = book.img['src']
+                image_url = urljoin(base_url, image_src)
+                image_name = image_src.split('/')[-1]
                 image_path = download_image(image_url, image_name, folder=args.dest_folder)
 
-            book_id = re.findall(r'\d+', book.a['href'])[0]
-            txt_url = f'https://tululu.org/txt.php?id={book_id}'
+            book_id = book.a['href']
+            book_url = urljoin(base_url, book_id)
+            book_response = requests.get(book_url, allow_redirects=False)
+            book_response.raise_for_status()
+            if not category_response.status_code == 200:
+                break
+
+            book_soup = BeautifulSoup(book_response.text, 'lxml')
+            comments = get_texts(book_soup.select('.texts .black'))
+            genres = get_texts(book_soup.select('span.d_book a'))
+
             if args.skip_txt:
                 book_path = None
             else:
-                book_path = download_txt(txt_url, title, folder=args.dest_folder)
-
-            book_url = f'https://tululu.org/b{book_id}/'
-            book_response = requests.get(book_url, allow_redirects=False)
-            book_response.raise_for_status()
-
-            if book_response.status_code == 200:
-                book_soup = BeautifulSoup(book_response.text, 'lxml')
-                comments = get_texts(book_soup.select('.texts .black'))
-                genres = get_texts(book_soup.select('span.d_book a'))
+                try:
+                    txt_href = book_soup.select_one('[href*="txt"]')['href']
+                    txt_url = urljoin(base_url, txt_href)
+                    book_path = download_txt(txt_url, title, folder=args.dest_folder)
+                except TypeError:
+                    book_path = None
+                    # TODO: поставить часть с проверкой наличия книги вначало, except = continue, дабы не сохранять инфу по книге которую нельзя скачать
 
             description = {
                 "title": title,
@@ -105,7 +104,6 @@ def main():
         dest_path = os.path.join(args.dest_folder, "description.json")
     else:
         dest_path = "description.json"
-
 
     if args.json_path is not None:
         os.makedirs(args.json_path, exist_ok=True)
