@@ -16,9 +16,9 @@ def get_args():
     parser.add_argument('--end_page', type=int, default=2,
                         help='Конечная страница категории(не включительно)')
 
-    parser.add_argument('--dest_folder', type=str, default='',
+    parser.add_argument('--dest_folder', type=str, default=None,
                         help='Путь к каталогу с результатами парсинга("имяПапки")')
-    parser.add_argument('--json_path', type=str, default='',
+    parser.add_argument('--json_path', type=str, default=None,
                         help='Путь к *.json файлу("имяПапки")')
 
     parser.add_argument('--skip_imgs', action='store_true',
@@ -42,6 +42,13 @@ def get_texts(texts_soup):
 
 def main():
     base_url = 'https://tululu.org/{}/{}'
+
+    # image_src = '/shots/239.jpg'
+    # print(image_src)
+    # image_url = urljoin(base_url, image_src)
+    # print(image_url)
+    # return
+
     args = get_args()
 
     descriptions = []
@@ -93,15 +100,16 @@ def main():
             }
             descriptions.append(description)
 
-
-    dest_path = os.path.join(args.dest_folder, "description.json")
-
-    if args.dest_folder:
+    if args.dest_folder is not None:
         os.makedirs(args.dest_folder, exist_ok=True)
+        dest_path = os.path.join(args.dest_folder, "description.json")
+    else:
+        dest_path = "description.json"
 
-    if args.json_path:
-        dest_path = os.path.join(args.json_path, "description.json")
+
+    if args.json_path is not None:
         os.makedirs(args.json_path, exist_ok=True)
+        dest_path = os.path.join(args.json_path, "description.json")
 
     with open(dest_path, "w", encoding='utf8') as file:
         json.dump(descriptions, file, ensure_ascii=False, indent=4)

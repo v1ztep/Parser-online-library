@@ -29,7 +29,10 @@ def download_txt(url, filename, folder=None):
 
     if txt_response.status_code == 200:
         correct_filename = f"{get_hash_sum(txt_response)}_{sanitize_filename(filename)}.txt"
-        correct_folder = sanitize_filepath(os.path.join(folder, 'books'))
+        if folder is not None:
+            correct_folder = sanitize_filepath(os.path.join(folder, 'books'))
+        else:
+            correct_folder = "books"
         correct_path = os.path.join(correct_folder, correct_filename)
 
         os.makedirs(correct_folder, exist_ok=True)
@@ -47,7 +50,10 @@ def download_image(url, filename, folder=None):
 
     if image_response.status_code == 200:
         correct_filename = f"{get_hash_sum(image_response)}_{sanitize_filename(filename)}"
-        correct_folder = sanitize_filepath(os.path.join(folder, 'images'))
+        if folder is not None:
+            correct_folder = sanitize_filepath(os.path.join(folder, 'images'))
+        else:
+            correct_folder = "images"
         correct_path = os.path.join(correct_folder, correct_filename)
 
         os.makedirs(correct_folder, exist_ok=True)
