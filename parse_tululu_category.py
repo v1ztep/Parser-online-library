@@ -58,14 +58,6 @@ def main():
         for book in books:
             author, title = book.a['title'].split(' - ', maxsplit=1)
 
-            if args.skip_imgs:
-                image_path = None
-            else:
-                image_src = book.img['src']
-                image_url = urljoin(base_url, image_src)
-                image_name = image_src.split('/')[-1]
-                image_path = download_image(image_url, image_name, folder=args.dest_folder)
-
             book_id = book.a['href']
             book_url = urljoin(base_url, book_id)
             book_response = requests.get(book_url, allow_redirects=False)
@@ -85,8 +77,15 @@ def main():
                     txt_url = urljoin(base_url, txt_href)
                     book_path = download_txt(txt_url, title, folder=args.dest_folder)
                 except TypeError:
-                    book_path = None
-                    # TODO: поставить часть с проверкой наличия книги вначало, except = continue, дабы не сохранять инфу по книге которую нельзя скачать
+                    continue
+
+            if args.skip_imgs:
+                image_path = None
+            else:
+                image_src = book.img['src']
+                image_url = urljoin(base_url, image_src)
+                image_name = image_src.split('/')[-1]
+                image_path = download_image(image_url, image_name, folder=args.dest_folder)
 
             description = {
                 "title": title,
