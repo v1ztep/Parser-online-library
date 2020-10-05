@@ -27,7 +27,7 @@ def download_txt(url, filename, folder=None):
     txt_response = requests.get(url, allow_redirects=False)
     txt_response.raise_for_status()
 
-    if txt_response.status_code == 200:
+    if not txt_response.status_code == 200:
         return
 
     correct_filename = f"{get_hash_sum(txt_response)}_{sanitize_filename(filename)}.txt"
@@ -42,7 +42,6 @@ def download_txt(url, filename, folder=None):
         file.write(txt_response.text)
 
     return correct_path
-
 
 
 def download_image(url, filename, folder=None):
