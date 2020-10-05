@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from tululu import download_txt, download_image
+from tululu import download_txt, download_image, try_get_response
 import json
 import argparse
 
@@ -12,7 +12,7 @@ def get_args():
 
     parser.add_argument('--start_page', type=int, default=1,
                         help='Стартовая страница категории(включительно)')
-    parser.add_argument('--end_page', type=int, default=2,
+    parser.add_argument('--end_page', type=int, default=3,
                         help='Конечная страница категории(не включительно)')
 
     parser.add_argument('--dest_folder', type=str, default=None,
@@ -47,8 +47,7 @@ def main():
     for category_page in range(args.start_page, args.end_page):
         category_url = urljoin(base_url, args.category + '/' + str(category_page))
 
-        category_response = requests.get(category_url, allow_redirects=False)
-        category_response.raise_for_status()
+        category_response = try_get_response(category_url)
         if not category_response.status_code == 200:
             break
 
@@ -60,8 +59,7 @@ def main():
 
             book_id = book.a['href']
             book_url = urljoin(base_url, book_id)
-            book_response = requests.get(book_url, allow_redirects=False)
-            book_response.raise_for_status()
+            book_response = try_get_response(book_url)
             if not category_response.status_code == 200:
                 break
 

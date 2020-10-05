@@ -11,6 +11,15 @@ def get_hash_sum(response):
     return
 
 
+def try_get_response(url):
+    try:
+        response = requests.get(url, allow_redirects=False)
+        response.raise_for_status()
+        return response
+    except requests.RequestException as err:
+        raise err
+
+
 def download_txt(url, filename, folder=None):
     """Функция для скачивания текстовых файлов.
 
@@ -24,9 +33,7 @@ def download_txt(url, filename, folder=None):
 
     """
 
-    txt_response = requests.get(url, allow_redirects=False)
-    txt_response.raise_for_status()
-
+    txt_response = try_get_response(url)
     if not txt_response.status_code == 200:
         return
 
@@ -45,9 +52,7 @@ def download_txt(url, filename, folder=None):
 
 
 def download_image(url, filename, folder=None):
-    image_response = requests.get(url, allow_redirects=False)
-    image_response.raise_for_status()
-
+    image_response = try_get_response(url)
     if not image_response.status_code == 200:
         return
 
