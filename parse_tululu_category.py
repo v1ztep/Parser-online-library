@@ -60,7 +60,7 @@ def main():
             book_id = book.a['href']
             book_url = urljoin(base_url, book_id)
             book_response = try_get_response(book_url)
-            if not category_response.status_code == 200:
+            if not book_response.status_code == 200:
                 break
 
             book_soup = BeautifulSoup(book_response.text, 'lxml')
