@@ -5,10 +5,10 @@ import hashlib
 
 
 def get_hash_sum(response):
-    if response.status_code == 200:
-        md5_hash = hashlib.md5(response.content)
-        return md5_hash.hexdigest()
-    return
+    if not response.status_code == 200:
+        return
+    md5_hash = hashlib.md5(response.content)
+    return md5_hash.hexdigest()
 
 
 def try_get_response(url):
