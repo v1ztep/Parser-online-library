@@ -6,8 +6,8 @@ import hashlib
 
 def get_hash_sum(response):
     if response.status_code == 200:
-        md5 = hashlib.md5(response.content)
-        return md5.hexdigest()
+        md5_hash = hashlib.md5(response.content)
+        return md5_hash.hexdigest()
     return
 
 
@@ -45,7 +45,7 @@ def download_txt(url, filename, folder=None):
     correct_path = os.path.join(correct_folder, correct_filename)
 
     os.makedirs(correct_folder, exist_ok=True)
-    with open(correct_path, 'w', encoding='utf8') as file:
+    with open(correct_path, 'w', encoding='utf8', newline='') as file:
         file.write(txt_response.text)
 
     return correct_path
