@@ -2,6 +2,7 @@ import os
 import requests
 from pathvalidate import sanitize_filename, sanitize_filepath
 import hashlib
+import time
 
 
 def get_hash_sum(response):
@@ -12,13 +13,23 @@ def get_hash_sum(response):
 
 
 def try_get_response(url):
-    try:
-        response = requests.get(url, allow_redirects=False)
-        response.raise_for_status()
-        return response
-    except requests.RequestException as err:
-        raise err
+    while True:
+        try:
+            response = requests.get(url, allow_redirects=False, timeout=10)
+            response.raise_for_status()
+            return response
+        except requests.ConnectionError as err:
+            print(f'ConnectionError: {url} - continue after 15 sec')
+            time.sleep(15)
+            continue
+        except requests.HTTPError as err:
+            print(f'HTTPError, Code:{err.response.status_code}, URL: {url}')
+            return err.response
+        except requests.RequestException:
+            raise
 
+url = 'https://tululu.org/txt.php?id=23912312312'
+print(try_get_response(url).status_code)
 
 def download_txt(url, filename, folder=None):
     """Функция для скачивания текстовых файлов.

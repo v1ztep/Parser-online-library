@@ -11,7 +11,7 @@ def get_args():
 
     parser.add_argument('--start_page', type=int, default=1,
                         help='Стартовая страница категории(включительно)')
-    parser.add_argument('--end_page', type=int, default=3,
+    parser.add_argument('--end_page', type=int, default=2,
                         help='Конечная страница категории(не включительно)')
 
     parser.add_argument('--dest_folder', type=str, default=None,
@@ -48,7 +48,7 @@ def main():
 
         category_response = try_get_response(category_url)
         if not category_response.status_code == 200:
-            break
+            continue
 
         category_soup = BeautifulSoup(category_response.text, 'lxml')
         books = category_soup.select('#content .d_book')
@@ -60,7 +60,7 @@ def main():
             book_url = urljoin(base_url, book_id)
             book_response = try_get_response(book_url)
             if not book_response.status_code == 200:
-                break
+                continue
 
             book_soup = BeautifulSoup(book_response.text, 'lxml')
             comments = get_texts(book_soup.select('.texts .black'))
