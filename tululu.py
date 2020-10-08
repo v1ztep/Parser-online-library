@@ -19,7 +19,7 @@ def try_get_response(url):
             response.raise_for_status()
             return response
         except requests.ConnectionError:
-            print(f'ConnectionError: {url} - continue after 15 sec')
+            print(f'ConnectionError: continue after 15 sec')
             time.sleep(15)
             continue
         except requests.HTTPError as err:
