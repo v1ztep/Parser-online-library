@@ -11,7 +11,7 @@ def get_args():
 
     parser.add_argument('--start_page', type=int, default=1,
                         help='Стартовая страница категории(включительно)')
-    parser.add_argument('--end_page', type=int, default=2,
+    parser.add_argument('--end_page', type=int, default=999,
                         help='Конечная страница категории(не включительно)')
 
     parser.add_argument('--dest_folder', type=str, default=None,
