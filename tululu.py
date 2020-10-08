@@ -18,7 +18,7 @@ def try_get_response(url):
             response = requests.get(url, allow_redirects=False, timeout=10)
             response.raise_for_status()
             return response
-        except requests.ConnectionError as err:
+        except requests.ConnectionError:
             print(f'ConnectionError: {url} - continue after 15 sec')
             time.sleep(15)
             continue
@@ -27,9 +27,7 @@ def try_get_response(url):
             return err.response
         except requests.RequestException:
             raise
-
-url = 'https://tululu.org/txt.php?id=23912312312'
-print(try_get_response(url).status_code)
+        
 
 def download_txt(url, filename, folder=None):
     """Функция для скачивания текстовых файлов.
