@@ -47,7 +47,9 @@ def main():
         category_url = urljoin(base_url, args.category + '/' + str(category_page))
 
         category_response = try_get_response(category_url)
-        if not category_response.status_code == 200:
+        if category_response.status_code == 301:
+            break
+        elif not category_response.status_code == 200:
             continue
 
         category_soup = BeautifulSoup(category_response.text, 'lxml')
