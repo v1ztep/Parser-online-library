@@ -27,7 +27,7 @@ def try_get_response(url):
             return err.response
         except requests.RequestException:
             raise
-        
+
 
 def download_txt(url, filename, folder=None):
     """Функция для скачивания текстовых файлов.
