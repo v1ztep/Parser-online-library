@@ -59,7 +59,7 @@ def main():
             author, title = book.a['title'].split(' - ', maxsplit=1)
 
             book_id = book.a['href']
-            book_url = urljoin(base_url, book_id)
+            book_url = urljoin(category_url, book_id)
             book_response = try_get_response(book_url)
             if not book_response.status_code == 200:
                 continue
