@@ -25,8 +25,6 @@ def try_get_response(url):
         except requests.HTTPError as err:
             print(f'HTTPError, Code:{err.response.status_code}, URL: {url}')
             return err.response
-        except requests.RequestException:
-            raise
 
 
 def download_txt(url, filename, folder=None):
