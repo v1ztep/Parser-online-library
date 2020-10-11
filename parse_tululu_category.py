@@ -73,7 +73,7 @@ def main():
             else:
                 try:
                     txt_href = book_soup.select_one('[href*="txt"]')['href']
-                    txt_url = urljoin(base_url, txt_href)
+                    txt_url = urljoin(book_url, txt_href)
                     book_path = download_txt(txt_url, title, folder=args.dest_folder)
                 except TypeError:
                     continue
@@ -82,7 +82,7 @@ def main():
                 image_path = None
             else:
                 image_src = book.img['src']
-                image_url = urljoin(base_url, image_src)
+                image_url = urljoin(book_url, image_src)
                 image_name = image_src.split('/')[-1]
                 image_path = download_image(image_url, image_name, folder=args.dest_folder)
 
