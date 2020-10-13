@@ -37,7 +37,7 @@ def download_txt(url, filename, folder=None):
     except requests.RequestException:
         return
 
-    if not txt_response.status_code == 200:
+    if txt_response.status_code != 200:
         return
 
     correct_filename = f"{get_hash_sum(txt_response)}_{sanitize_filename(filename)}.txt"
@@ -60,7 +60,7 @@ def download_image(url, filename, folder=None):
     except requests.RequestException:
         return
 
-    if not image_response.status_code == 200:
+    if image_response.status_code != 200:
         return
 
     correct_filename = f"{get_hash_sum(image_response)}_{sanitize_filename(filename)}"
