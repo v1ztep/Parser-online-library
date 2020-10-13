@@ -14,8 +14,6 @@ def get_hash_sum(response):
 def request_tululu(url):
     response = requests.get(url, allow_redirects=False, timeout=10)
     response.raise_for_status()
-    if response.status_code == 301:
-        raise requests.HTTPError
     return response
 
 
