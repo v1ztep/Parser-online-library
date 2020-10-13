@@ -2,7 +2,6 @@ import os
 import requests
 from pathvalidate import sanitize_filename, sanitize_filepath
 import hashlib
-import time
 
 
 def get_hash_sum(response):
@@ -12,19 +11,10 @@ def get_hash_sum(response):
     return md5_hash.hexdigest()
 
 
-def try_get_response(url):
-    while True:
-        try:
-            response = requests.get(url, allow_redirects=False, timeout=10)
-            response.raise_for_status()
-            return response
-        except requests.ConnectionError:
-            print(f'ConnectionError: continue after 15 sec')
-            time.sleep(15)
-            continue
-        except requests.HTTPError as err:
-            print(f'HTTPError, Code:{err.response.status_code}, URL: {url}')
-            return err.response
+def request_tululu(url):
+    response = requests.get(url, allow_redirects=False, timeout=10)
+    response.raise_for_status()
+    return response
 
 
 def download_txt(url, filename, folder=None):
@@ -40,7 +30,11 @@ def download_txt(url, filename, folder=None):
 
     """
 
-    txt_response = try_get_response(url)
+    try:
+        txt_response = request_tululu(url)
+    except requests.RequestException:
+        return
+
     if not txt_response.status_code == 200:
         return
 
@@ -59,7 +53,11 @@ def download_txt(url, filename, folder=None):
 
 
 def download_image(url, filename, folder=None):
-    image_response = try_get_response(url)
+    try:
+        image_response = request_tululu(url)
+    except requests.RequestException:
+        return
+
     if not image_response.status_code == 200:
         return
 

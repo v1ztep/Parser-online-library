@@ -1,9 +1,11 @@
 import os
+import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from tululu import download_txt, download_image, try_get_response
+from tululu import download_txt, download_image, request_tululu
 import json
 import argparse
+import time
 
 
 def get_args():
@@ -46,10 +48,17 @@ def main():
     for category_page in range(args.start_page, args.end_page):
         category_url = urljoin(base_url, args.category + '/' + str(category_page))
 
-        category_response = try_get_response(category_url)
-        if category_response.status_code == 301:
+        try:
+            category_response = request_tululu(category_url)
+        except requests.ConnectionError:
+            print(f'ConnectionError: continue after 15 sec')
+            time.sleep(15)
+            continue
+        except requests.HTTPError as err:
+            print(f'HTTPError, Code:{err.response.status_code}, URL: {category_url}')
             break
-        elif not category_response.status_code == 200:
+
+        if category_response.status_code != 200:
             continue
 
         category_soup = BeautifulSoup(category_response.text, 'lxml')
@@ -60,8 +69,18 @@ def main():
 
             book_id = book.a['href']
             book_url = urljoin(category_url, book_id)
-            book_response = try_get_response(book_url)
-            if not book_response.status_code == 200:
+
+            try:
+                book_response = request_tululu(book_url)
+            except requests.ConnectionError:
+                print(f'ConnectionError: continue after 15 sec')
+                time.sleep(15)
+                continue
+            except requests.HTTPError as err:
+                print(f'HTTPError, Code:{err.response.status_code}, URL: {category_url}')
+                break
+
+            if book_response.status_code != 200:
                 continue
 
             book_soup = BeautifulSoup(book_response.text, 'lxml')
