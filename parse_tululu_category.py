@@ -55,7 +55,7 @@ def main():
             time.sleep(15)
             continue
         except requests.HTTPError as err:
-            print(f'HTTPError, Code:{err.response.status_code}, URL: {category_url}')
+            print(f'HTTPError, URL: {category_url}')
             break
 
         if category_response.status_code != 200:
@@ -77,7 +77,7 @@ def main():
                 time.sleep(15)
                 continue
             except requests.HTTPError as err:
-                print(f'HTTPError, Code:{err.response.status_code}, URL: {category_url}')
+                print(f'HTTPError, URL: {category_url}')
                 break
 
             if book_response.status_code != 200:
