@@ -54,7 +54,7 @@ def main():
             print(f'ConnectionError: continue after 15 sec')
             time.sleep(15)
             continue
-        except requests.HTTPError as err:
+        except requests.HTTPError:
             print(f'HTTPError, URL: {category_url}')
             break
 
