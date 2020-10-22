@@ -45,7 +45,7 @@ def download_txt(url, filename, folder=None):
         correct_folder = sanitize_filepath(os.path.join(folder, 'books'))
     else:
         correct_folder = "books"
-    correct_path = os.path.join(correct_folder, correct_filename)
+    correct_path = os.path.join(correct_folder, correct_filename).replace("\\", "/")
 
     os.makedirs(correct_folder, exist_ok=True)
     with open(correct_path, 'w', encoding='utf8', newline='') as file:
@@ -68,7 +68,7 @@ def download_image(url, filename, folder=None):
         correct_folder = sanitize_filepath(os.path.join(folder, 'images'))
     else:
         correct_folder = "images"
-    correct_path = os.path.join(correct_folder, correct_filename)
+    correct_path = os.path.join(correct_folder, correct_filename).replace("\\", "/")
 
     os.makedirs(correct_folder, exist_ok=True)
     with open(correct_path, 'wb') as file:
