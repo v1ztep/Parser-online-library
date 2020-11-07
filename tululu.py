@@ -2,6 +2,9 @@ import os
 import requests
 from pathvalidate import sanitize_filename, sanitize_filepath
 import hashlib
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def get_hash_sum(response):
@@ -12,7 +15,7 @@ def get_hash_sum(response):
 
 
 def request_tululu(url):
-    response = requests.get(url, allow_redirects=False, timeout=10)
+    response = requests.get(url, allow_redirects=False, verify=False, timeout=10)
     response.raise_for_status()
     if response.status_code == 301:
         raise requests.HTTPError
